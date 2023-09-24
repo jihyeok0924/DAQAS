@@ -114,7 +114,6 @@ def process_file(uploaded_file, file_type):
             st.write("Answer:", answer)
 
     elif file_type == 'csv':
-        # Handling CSV files
         question = st.text_input("Enter your question about the CSV data: ")
         if st.button("Process"):
             df = pd.read_csv(temp_file_path)
