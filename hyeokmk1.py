@@ -28,7 +28,7 @@ sys.path.insert(0, pysqlite3_path)
 import pysqlite3
 
 # API키를 환경변수로 설정
-os.environ["OPENAI_API_KEY"] = "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" 
+os.environ["OPENAI_API_KEY"] = "" 
 
 # 텍스트를 임시 파일로 저장하는 함수
 def save_text_to_temp_file(raw_text):
