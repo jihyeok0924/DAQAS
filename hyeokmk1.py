@@ -85,7 +85,6 @@ def process_file(uploaded_file, file_type):
     detected_language = None
 
     if file_type in ['pdf', 'docx']:
-        with st.spinner("Processing the document..."):
             vectordb = create_chroma_db(raw_text)
 
         template = """
@@ -114,7 +113,6 @@ def process_file(uploaded_file, file_type):
             st.write("Answer:", answer)
 
     elif file_type == 'csv':
-        with st.spinner("Processing the CSV data..."):
             question = st.text_input("Enter your question about the CSV data: ")
             if st.button("Process"):
                 df = pd.read_csv(temp_file_path)
@@ -122,7 +120,6 @@ def process_file(uploaded_file, file_type):
                 answer = agent.run(question)
                 st.write("Answer:", answer)
 
-    st.spinner("")
 
 # Streamlit을 실행
 if __name__ == '__main__':
