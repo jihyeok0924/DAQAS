@@ -72,7 +72,6 @@ def process_file(uploaded_file, file_type):
         temp_file.write(uploaded_file.read())
         temp_file_path = temp_file.name
 
-    # Extracting text from the file based on its type
     if file_type == 'pdf':
         reader = PdfReader(temp_file_path)
         for page in reader.pages:
@@ -84,7 +83,7 @@ def process_file(uploaded_file, file_type):
         for p in doc.paragraphs:
             raw_text += p.text
 
-    detected_language = None  # CSV 파일의 경우 언어 감지를 수행하지 않도록 None으로 설정
+    detected_language = None
 
     if file_type in ['pdf', 'do행
 if __name__ == '__main__':
