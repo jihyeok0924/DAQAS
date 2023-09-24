@@ -64,7 +64,8 @@ def create_chroma_db(raw_text):
 # 파일 경로를 추출하는 함수
 def get_file_extension(file_path):
     return os.path.splitext(file_path)[1].lower()[1:]
-#파일들을 처리하는 함수
+    
+# 파일들을 처리하는 함수
 def process_file(uploaded_file, file_type):
     raw_text = ""
     with tempfile.NamedTemporaryFile(delete=False, suffix=".tmp", mode="wb") as temp_file:
@@ -85,6 +86,7 @@ def process_file(uploaded_file, file_type):
     detected_language = None
 
     if file_type in ['pdf', 'docx']:
+        with st.spinner("Processing the document..."):
             vectordb = create_chroma_db(raw_text)
 
         template = """
@@ -113,6 +115,7 @@ def process_file(uploaded_file, file_type):
             st.write("Answer:", answer)
 
     elif file_type == 'csv':
+        with st.spinner("Processing the CSV data..."):
             question = st.text_input("Enter your question about the CSV data: ")
             if st.button("Process"):
                 df = pd.read_csv(temp_file_path)
@@ -120,6 +123,7 @@ def process_file(uploaded_file, file_type):
                 answer = agent.run(question)
                 st.write("Answer:", answer)
 
+    st.spinner("")
 
 # Streamlit을 실행
 if __name__ == '__main__':
