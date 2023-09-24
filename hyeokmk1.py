@@ -112,7 +112,9 @@ def process_file(uploaded_file, file_type):
             qa_chain = load_qa_chain(model, chain_type="map_reduce")
             qa_document_chain = AnalyzeDocumentChain(combine_docs_chain=qa_chain)
             answer = qa_document_chain.run(input_document=relevant_docs_content, question=combined_question, language=detected_language)
-            st.write("Answer:", answer)
+            st.markdown("## Answer:")
+            st.markdown(answer)
+
 
     elif file_type == 'csv':
             question = st.text_input("Enter your question about the CSV data: ")
@@ -120,7 +122,9 @@ def process_file(uploaded_file, file_type):
                 df = pd.read_csv(temp_file_path)
                 agent = create_pandas_dataframe_agent(OpenAI(temperature=0), df, verbose=True)
                 answer = agent.run(question)
-                st.write("Answer:", answer)
+                st.markdown("## Answer:")
+                st.markdown(answer)
+
 
 # Streamlit을 실행
 if __name__ == '__main__':
