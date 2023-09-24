@@ -103,14 +103,15 @@ def process_file(uploaded_file, file_type):
 
         question = st.text_input("Enter your question about the document: ")
         prompted_text = prompt.format() 
+        combined_question = prompted_text + " " + question
         if st.button("Process"):
             retriever = vectordb.as_retriever(search_kwargs={"k": 6})
-            docs = retriever.get_relevant_documents(question)
-            relevant_docs_content = "\n".join([doc.page_content for doc in docs])
+            docs = retriever.get_relevant_documents(combined_question)
+            relevant_docs_content = "\\n".join([doc.page_content for doc in docs])
             model = ChatOpenAI(model="gpt-3.5-turbo")
             qa_chain = load_qa_chain(model, chain_type="map_reduce")
             qa_document_chain = AnalyzeDocumentChain(combine_docs_chain=qa_chain)
-            answer = qa_document_chain.run(input_document=relevant_docs_content, question=question, language=detected_language)
+            answer = qa_document_chain.run(input_document=relevant_docs_content, question=combined_question, language=detected_language)
             st.write("Answer:", answer)
 
     elif file_type == 'csv':
