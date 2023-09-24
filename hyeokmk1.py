@@ -64,8 +64,7 @@ def create_chroma_db(raw_text):
 # 파일 경로를 추출하는 함수
 def get_file_extension(file_path):
     return os.path.splitext(file_path)[1].lower()[1:]
-
-# 파일들을 처리하는 함수
+#파일들을 처리하는 함수
 def process_file(uploaded_file, file_type):
     raw_text = ""
     with tempfile.NamedTemporaryFile(delete=False, suffix=".tmp", mode="wb") as temp_file:
@@ -85,9 +84,10 @@ def process_file(uploaded_file, file_type):
 
     detected_language = None
 
-  if file_type in ['pdf', 'docx']:
-        vectordb = create_chroma_db(raw_text)
-      
+    if file_type in ['pdf', 'docx']:
+        with st.spinner("Processing the document..."):
+            vectordb = create_chroma_db(raw_text)
+
         template = """
         You are an AI chatbot that generates answers based on the uploaded document.
         Please provide accurate and specific answers based on what can be found in the document.
@@ -114,12 +114,15 @@ def process_file(uploaded_file, file_type):
             st.write("Answer:", answer)
 
     elif file_type == 'csv':
-        question = st.text_input("Enter your question about the CSV data: ")
-        if st.button("Process"):
-            df = pd.read_csv(temp_file_path)
-            agent = create_pandas_dataframe_agent(OpenAI(temperature=0), df, verbose=True)
-            answer = agent.run(question)
-            st.write("Answer:", answer)
+        with st.spinner("Processing the CSV data..."):
+            question = st.text_input("Enter your question about the CSV data: ")
+            if st.button("Process"):
+                df = pd.read_csv(temp_file_path)
+                agent = create_pandas_dataframe_agent(OpenAI(temperature=0), df, verbose=True)
+                answer = agent.run(question)
+                st.write("Answer:", answer)
+
+    st.spinner("")
 
 # Streamlit을 실행
 if __name__ == '__main__':
