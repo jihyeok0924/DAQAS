@@ -49,7 +49,7 @@ def clear_directory(directory_path):
 # Chroma 데이터 베이스를 생성하는 함수
 def create_chroma_db(raw_text):
     persist_directory = '/home/jihyeok/바탕화면/database'
-    clear_directory(persist_directory) # 데이터 베이스 초기화
+    clear_directory(persist_directory) 
     temp_file_path = save_text_to_temp_file(raw_text)
     text_loader = TextLoader(file_path=temp_file_path)
     document = text_loader.load()
@@ -65,7 +65,7 @@ def create_chroma_db(raw_text):
 def get_file_extension(file_path):
     return os.path.splitext(file_path)[1].lower()[1:]
 
-# 파일들을 처리하는 함수수
+# 파일들을 처리하는 함수
 def process_file(uploaded_file, file_type):
     raw_text = ""
     with tempfile.NamedTemporaryFile(delete=False, suffix=".tmp", mode="wb") as temp_file:
@@ -85,7 +85,44 @@ def process_file(uploaded_file, file_type):
 
     detected_language = None
 
-    if file_type in ['pdf', 'do행
+  if file_type in ['pdf', 'docx']:
+        vectordb = create_chroma_db(raw_text)
+      
+        template = """
+        You are an AI chatbot that generates answers based on the uploaded document.
+        Please provide accurate and specific answers based on what can be found in the document.
+
+        1. Be specific and provide details in your question for a more accurate answer.
+        2. Please enter your question about the document or provide details for a specific answer.
+        3. If you have a general question about the document, please ask.
+        4. If you want a mathematical problem solved, please specify the problem and include any relevant details.
+
+        Please answer as kindly as you can!
+        """
+        prompt = PromptTemplate.from_template(template) 
+
+        question = st.text_input("Enter your question about the document: ")
+        prompted_text = prompt.format() 
+        if st.button("Process"):
+            retriever = vectordb.as_retriever(search_kwargs={"k": 3})
+            docs = retriever.get_relevant_documents(question)
+            relevant_docs_content = "\n".join([doc.page_content for doc in docs])
+            model = ChatOpenAI(model="gpt-3.5-turbo")
+            qa_chain = load_qa_chain(model, chain_type="map_reduce")
+            qa_document_chain = AnalyzeDocumentChain(combine_docs_chain=qa_chain)
+            answer = qa_document_chain.run(input_document=relevant_docs_content, question=question, language=detected_language)
+            st.write("Answer:", answer)
+
+    elif file_type == 'csv':
+        # Handling CSV files
+        question = st.text_input("Enter your question about the CSV data: ")
+        if st.button("Process"):
+            df = pd.read_csv(temp_file_path)
+            agent = create_pandas_dataframe_agent(OpenAI(temperature=0), df, verbose=True)
+            answer = agent.run(question)
+            st.write("Answer:", answer)
+
+# Streamlit을 실행
 if __name__ == '__main__':
     st.title("Document Auto Q&A System")
     file_path = st.file_uploader("Upload a file", type=["pdf", "docx", "csv"])
