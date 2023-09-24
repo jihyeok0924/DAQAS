@@ -21,6 +21,7 @@ import tempfile
 import sys
 import os
 from langchain.prompts import PromptTemplate
+import datetime
 
 # pysqlite3 패키지의 라이브러리 경로 설정
 pysqlite3_path = '/home/jihyeok/.local/lib/python3.9/site-packages/pysqlite3'
@@ -48,7 +49,8 @@ def clear_directory(directory_path):
 
 # Chroma 데이터 베이스를 생성하는 함수
 def create_chroma_db(raw_text):
-    persist_directory = '/home/jihyeok/바탕화면/database'
+    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    persist_directory = f'/home/jihyeok/바탕화면/database_{timestamp}'
     clear_directory(persist_directory) 
     temp_file_path = save_text_to_temp_file(raw_text)
     text_loader = TextLoader(file_path=temp_file_path)
@@ -104,7 +106,7 @@ def process_file(uploaded_file, file_type):
         question = st.text_input("Enter your question about the document: ")
         prompted_text = prompt.format() 
         if st.button("Process"):
-            retriever = vectordb.as_retriever(search_kwargs={"k": 3})
+            retriever = vectordb.as_retriever(search_kwargs={"k": 6})
             docs = retriever.get_relevant_documents(question)
             relevant_docs_content = "\n".join([doc.page_content for doc in docs])
             model = ChatOpenAI(model="gpt-3.5-turbo")
