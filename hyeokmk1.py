@@ -105,7 +105,7 @@ def process_file(uploaded_file, file_type):
         prompted_text = prompt.format() 
         combined_question = prompted_text + " " + question
         if st.button("Process"):
-            retriever = vectordb.as_retriever(search_kwargs={"k": 6})
+            retriever = vectordb.as_retriever(search_kwargs={"k": 3})
             docs = retriever.get_relevant_documents(combined_question)
             relevant_docs_content = "\\n".join([doc.page_content for doc in docs])
             model = ChatOpenAI(model="gpt-3.5-turbo")
