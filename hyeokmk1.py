@@ -21,7 +21,6 @@ import tempfile
 import sys
 import os
 from langchain.prompts import PromptTemplate
-import datetime
 
 # pysqlite3 패키지의 라이브러리 경로 설정
 pysqlite3_path = '/home/jihyeok/.local/lib/python3.9/site-packages/pysqlite3'
@@ -49,8 +48,7 @@ def clear_directory(directory_path):
 
 # Chroma 데이터 베이스를 생성하는 함수
 def create_chroma_db(raw_text):
-    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    persist_directory = f'/home/jihyeok/바탕화면/database_{timestamp}'
+    persist_directory = '/home/jihyeok/바탕화면/database'
     clear_directory(persist_directory) 
     temp_file_path = save_text_to_temp_file(raw_text)
     text_loader = TextLoader(file_path=temp_file_path)
