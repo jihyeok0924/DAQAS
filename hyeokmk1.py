@@ -4,7 +4,6 @@ from PyPDF2 import PdfReader
 from docx import Document
 from langchain import OpenAI
 from langchain.chains import AnalyzeDocumentChain
-from langchain.chains.summarize import load_summarize_chain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
 from langdetect import detect
@@ -19,7 +18,6 @@ from langchain.document_loaders import DirectoryLoader
 import pandas as pd
 import tempfile
 import sys
-import os
 from langchain.prompts import PromptTemplate
 
 # pysqlite3 패키지의 라이브러리 경로 설정
