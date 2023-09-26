@@ -34,20 +34,9 @@ def save_text_to_temp_file(raw_text):
         temp_file.write(raw_text)
         return temp_file.name
 
-# 경로 내의 임시 파일을 삭제하는 함수
-def clear_directory(directory_path):
-    for filename in os.listdir(directory_path):
-        file_path = os.path.join(directory_path, filename)
-        try:
-            if os.path.isfile(file_path):
-                os.remove(file_path)
-        except Exception as e:
-            pass
-
 # Chroma 데이터 베이스를 생성하는 함수
 def create_chroma_db(raw_text):
     persist_directory = '/home/jihyeok/바탕화면/database'
-    clear_directory(persist_directory) 
     temp_file_path = save_text_to_temp_file(raw_text)
     text_loader = TextLoader(file_path=temp_file_path)
     document = text_loader.load()
