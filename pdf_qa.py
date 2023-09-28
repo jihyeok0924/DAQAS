@@ -21,12 +21,6 @@ def process_file(file_path):
 
         detected_language = detect(raw_text)
 
-        llm = OpenAI(temperature=0)
-        summary_chain = load_summarize_chain(llm, chain_type="map_reduce")
-        summarize_document_chain = AnalyzeDocumentChain(combine_docs_chain=summary_chain)
-        summary = summarize_document_chain.run(input_document=raw_text, language=detected_language)
-        print("Summary:", summary)
-
         question = input("Enter your question about the PDF: ")
         model = ChatOpenAI(model="gpt-3.5-turbo")
         qa_chain = load_qa_chain(model, chain_type="map_reduce")
