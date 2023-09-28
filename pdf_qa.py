@@ -2,7 +2,6 @@ import os
 from PyPDF2 import PdfReader
 from langchain import OpenAI
 from langchain.chains import AnalyzeDocumentChain
-from langchain.chains.summarize import load_summarize_chain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.chat_models import ChatOpenAI
 from langdetect import detect
