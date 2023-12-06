@@ -25,16 +25,13 @@ pysqlite3_path = '/home/jihyeok/.local/lib/python3.9/site-packages/pysqlite3'
 sys.path.insert(0, pysqlite3_path)
 import pysqlite3
 
-# API키를 환경변수로 설정
 os.environ["OPENAI_API_KEY"] = "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" 
 
-# 텍스트를 임시 파일로 저장하는 함수
 def save_text_to_temp_file(raw_text):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".txt", mode="w", encoding="utf-8") as temp_file:
         temp_file.write(raw_text)
         return temp_file.name
 
-# Chroma 데이터 베이스를 생성하는 함수
 def create_chroma_db(raw_text):
     persist_directory = '/home/jihyeok/바탕화면/database'
     temp_file_path = save_text_to_temp_file(raw_text)
@@ -48,11 +45,9 @@ def create_chroma_db(raw_text):
     os.remove(temp_file_path)
     return vectordb
 
-# 파일 경로를 추출하는 함수
 def get_file_extension(file_path):
     return os.path.splitext(file_path)[1].lower()[1:]
     
-# 파일들을 처리하는 함수
 def process_file(uploaded_file, file_type):
     raw_text = ""
     with tempfile.NamedTemporaryFile(delete=False, suffix=".tmp", mode="wb") as temp_file:
@@ -113,7 +108,6 @@ def process_file(uploaded_file, file_type):
                 st.markdown(answer)
 
 
-# Streamlit을 실행
 if __name__ == '__main__':
     st.title("Document Auto Q&A System")
     file_path = st.file_uploader("Upload a file", type=["pdf", "docx", "csv"])
